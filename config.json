@@ -1,0 +1,11 @@
+{
+    "secret" : "secret",
+
+    "mysql" : {
+        "streaming" : true,
+        "host"     : "localhost",
+        "user"     : "root",
+        "password" : "",
+        "database" : "pokeindex"
+    }
+}

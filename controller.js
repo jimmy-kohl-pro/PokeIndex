@@ -25,7 +25,6 @@ async function getAllPokemonFr(P, pokeNbr, pokeList)
             } else {
                 pokeList[i] = {name: response.names[lang].name, id: response.id};
             }
-            console.log(`${pokeList[i].name} and ${pokeList[i].id}`);
         })
         .catch(function(error) {
             // console.log('There was an ERROR: ', error);
@@ -43,3 +42,61 @@ exports.getNameIdList = async function (P)
     await getAllPokemonFr(P, pokeNbr, pokeList);
     return {pokeList: pokeList, pokeNbr: pokeNbr};
 };
+
+exports.getPokemonSpec = async function (P, id)
+{
+    var pokeName = null;
+    await P.getPokemonSpeciesByName(id)
+    .then( async function(response) {
+        var lang = await getLanguageName(response.names, 'fr');
+        if (lang == -1) {
+            pokeSpec = {name: response.name, id: response.id};
+        } else {
+            pokeSpec = {name: response.names[lang].name, id: response.id};
+        }
+    })
+    .catch(function(error) {
+        // console.log('There was an ERROR: ', error);
+    });
+    return {pokeSpec: pokeSpec};
+}
+
+exports.logInRequest = function (username, password, connection, res, req)
+{
+    if (username && password) {
+        connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
+            if (error) throw error;
+            if (results.length > 0) {
+                req.session.loggedin = true;
+                req.session.username = username;
+                res.redirect('/');
+            } else {
+                res.send('Incorrect username or password.');
+            }
+            res.end();
+        });
+    } else {
+        res.send('Enter username and password.')
+        res.end();
+    }
+}
+
+exports.registerRequest = function (username, password, connection, res, req)
+{
+    if (username && password) {
+        connection.query('SELECT * FROM accounts WHERE username = ?', [username], function(error, results, fields) {
+            if (error) throw error;
+            if (results.length > 0) {
+                res.send('Username already exists.')
+            } else {
+                connection.query('INSERT INTO `accounts` (`username`, `password`) VALUES (?, ?)', [username, password], function(error, results, fields) {
+                    if (error) throw error;
+                    res.send('User registered.')
+                });
+            }
+        })
+    } else {
+        res.send('Enter username and password.');
+        res.end();
+    }
+}
