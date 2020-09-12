@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <ul>
+        <% for (var i = 0; i < pokeNbr ; i++) { %> 
+            <li><img src="/image/<%= pokeList[i].id %>.png" alt="<%= pokeList[i].name %>">
+            <a href="/pokemon/<%= pokeList[i].id %>"><%= pokeList[i].name %> #<%= pokeList[i].id %></a></li>
+        <% } %>
+    </ul>
+</html> 
