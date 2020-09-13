@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PokeIndex</title>
+    <meta charset="utf-8">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <nav>
+        <ul>
+            <div class="menu">
+                <li class="liste"><a class="btn" href="/">Liste des Pokémon</a></li>
+            </div>
+            <div class="info">
+                <% if (req.session.loggedin) { %> 
+                    <li class="btn-nav"><p>Bonjour <%= req.session.username %></p></li>
+                    <li class="btn-nav">
+                        <form method="post" action="/logout" class="inline">
+                            <input type="hidden" name="extra_submit_param" value="extra_submit_value">
+                            <button type="submit" name="submit_param" value="submit_value" class="btn">
+                                Se déconnecter
+                            </button>
+                        </form>
+                    </li>
+                <% } else {%> 
+                    <li class="btn-nav"><a class="btn" href="/login">Se connecter</a></li>
+                    <li class="btn-nav"><a class="btn" href="/register">S'enregistrer</a></li>
+                <% } %> 
+            </div>
+        </ul>
+    </nav>
+    <section>
+      <%- body -%>
+    </section>
+  </body>
+</html>

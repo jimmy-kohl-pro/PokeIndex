@@ -1,10 +1,110 @@
-ul {
+body {
+  font-family: 'Source code pro', Calibri, serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+.btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-family: 'Source code pro', Calibri, serif;
+}
+
+nav {
+  width: 100%;
+  background-color: grey;
+}
+
+nav ul {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+nav .btn:hover {
+  border-top: 5px solid red;
+  background-color: lightcoral;
+}
+
+nav li:hover .btn {
+  padding: 15px 30px 20px 30px;
+}
+
+nav li {
+  list-style-type: none;
+  float: left;
+  color: white;
+}
+
+nav .btn {
+  text-decoration: none;
+  padding: 20px 30px;
+  color: white;
+  display: inline-block;
+}
+
+.info {
+  float: right;
+  right: 0px;
+}
+
+/* ul {
     background: #3399ff;
     padding: 20px;
-  }
+}
 
 ul li {
     background: #cce5ff;
     margin: 5px;
-  }
+} */
 
+.inline {
+  display: inline;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-family: 'Source code pro', Calibri, serif;
+}
+.link-button:focus {
+  outline: none;
+}
+.link-button:active {
+  color:red;
+}
+
+
+.form {
+  width: 300px;
+  margin: 0 auto;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+.form h1 {
+  text-align: center;
+  color: #4d4d4d;
+  font-size: 24px;
+  padding: 20px 0 20px 0;
+}
+.form input[type="password"],
+.form input[type="text"] {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #dddddd;
+  margin-bottom: 15px;
+  box-sizing:border-box;
+}
+.form input[type="submit"] {
+  width: 100%;
+  padding: 15px;
+  background-color: #535b63;
+  border: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+}

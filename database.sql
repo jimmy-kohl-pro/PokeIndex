@@ -8,3 +8,11 @@ CREATE TABLE accounts
     username VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL
 );
+CREATE TABLE comments
+(
+    comment_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    content VARCHAR(200) NOT NULL,
+    pokemon_id_attach INT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES accounts(user_id)
+);

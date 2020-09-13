@@ -1,6 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <img src="/image/other/official-artwork/<%= pokeSpec.id %>.png" alt="<%= pokeSpec.name %>">
-    <h1><%= pokeSpec.name%></h1>
-    <p>le super pokémon</p>
-</html>
+<% layout('layout') -%>
+<img src="/image/other/official-artwork/<%= pokeSpec.id %>.png" alt="<%= pokeSpec.name %>">
+<h1><%= pokeSpec.name%></h1>
+<p>le super pokémon</p>
+<% if (req.session.loggedin) { %> 
+<form action="/addcomment" method="POST">
+    <label for="comment">Commentez :</label>
+        <input type="text" id="comment" name="comment">
+</form>
+    <% for (var i = 0; i < commentList.length; i++) { %> <% } %> 
+<% } else { %> 
+    <p>Vous devez être connecté pour voir les commentaires.</p>
+<% } %> 
