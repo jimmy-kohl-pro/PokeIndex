@@ -1,13 +1,24 @@
 <% layout('layout') -%>
 <img src="/image/other/official-artwork/<%= pokeSpec.id %>.png" alt="<%= pokeSpec.name %>">
 <h1><%= pokeSpec.name%></h1>
-<p>le super pokémon</p>
+<p><%= pokeSpec.flavor[Math.floor(Math.random() * Math.floor(pokeSpec.flavor.length))].flavor_text %></p>
+<p><%= pokeSpec.genus %></p>
 <% if (req.session.loggedin) { %> 
 <form action="/addcomment" method="POST">
     <label for="comment">Commentez :</label>
         <input type="text" id="comment" name="comment">
 </form>
-    <% for (var i = 0; i < commentList.length; i++) { %> <% } %> 
+    <% for (var i = 0; i < commentList.length; i++) { %> 
+        <p><%= commentList[i].username %> : <%= commentList[i].content %> </p>
+        <% if (commentList[i].user_id === userId) { %> 
+            <form method="post" action="/deletecomment/<%= userId %>/<%= commentList[i].comment_id %>">
+                <input type="hidden" value="extra_submit_value">
+                <button type="submit" value="submit_value">
+                    Supprimer le commentaire
+                </button>
+            </form>
+        <% } %>
+    <% } %>
 <% } else { %> 
-    <p>Vous devez être connecté pour voir les commentaires.</p>
+    <p>Vous devez vous <a href="/login">connecter</a> pour voir les commentaires.</p>
 <% } %> 

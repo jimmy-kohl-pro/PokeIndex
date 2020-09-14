@@ -13,6 +13,7 @@ CREATE TABLE comments
     comment_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     content VARCHAR(200) NOT NULL,
     pokemon_id_attach INT NOT NULL,
+    username VARCHAR(50) NOT NULL,
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES accounts(user_id)
 );

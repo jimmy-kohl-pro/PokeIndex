@@ -40,14 +40,17 @@ exports.getPokemonSpec = async function (P, id)
     await P.getPokemonSpeciesByName(id)
     .then( async function(response) {
         var lang = await getLanguageName(response.names, 'fr');
+        let flavor = response.flavor_text_entries.filter(element => element.language.name == 'fr');
+        let genus = response.genera.find(element => element.language.name == 'fr').genus;
+        let type = null;
+        pokeSpec = {id: response.id, genus: genus, flavor: flavor};
         if (lang == -1) {
-            pokeSpec = {name: response.name, id: response.id};
+            pokeSpec.name = response.name;
         } else {
-            pokeSpec = {name: response.names[lang].name, id: response.id};
+            pokeSpec.name = response.names[lang].name;
         }
     })
     .catch(function(error) {
-        // console.log('There was an ERROR: ', error);
     });
     return {pokeSpec: pokeSpec};
 }
@@ -57,7 +60,6 @@ exports.logInRequest = function (username, password, connection, res, req)
     if (username && password) {
         connection.query('SELECT * FROM accounts WHERE username = ? AND password = ?', [username, password], function(error, results, fields) {
             if (error) throw error;
-            console.log(results[0]);
             if (results) {
                 req.session.loggedin = true;
                 req.session.username = username;
@@ -93,19 +95,18 @@ exports.registerRequest = function (username, password, connection, res, req)
     }
 }
 
-exports.getComment = function (connection)
+exports.getComment = async function (connection, pokemonId, callback)
 {
-    var commentList = []
-    return ({commentList : commentList})
+    await connection.query('SELECT * FROM comments WHERE pokemon_id_attach = ?', [pokemonId], async function(error, results, fields) {
+        return callback({commentList: results});
+    });
 }
-
-  function getIdWithUsername(connection, username, callback)
+exports.getIdWithUsername = function (connection, username, callback)
 {
     connection.query('SELECT * FROM accounts WHERE username = ?', [username], function(err, results){
           if (err){ 
             throw err;
           }
-          console.log(results[0].user_id);
           id_result = results[0].user_id;
 
           return callback(results[0].user_id);
@@ -119,8 +120,22 @@ exports.addComment = function (connection, username, commentContent, pokemonId)
         getIdWithUsername(connection, username, function(result) {
             if (commentContent) {
                 userId = result;
-                connection.query('INSERT INTO `comments` (`content`, `pokemon_id_attach`, `user_id`) VALUES (?, ?, ?)', [commentContent,  pokemonId, userId]);
+                connection.query('INSERT INTO `comments` (`content`, `pokemon_id_attach`, `username`,`user_id`) VALUES (?, ?, ?, ?)', [commentContent,  pokemonId, username, userId]);
             }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+exports.deleteComment = function (connection, username, commentId, userId)
+{
+    try {
+        var myUserId;
+        getIdWithUsername(connection, username, function(result) {
+            myUserId = result;
+            if (myUserId == userId)
+                connection.query('DELETE FROM `comments` WHERE comment_id = ? AND user_id = ?', [commentId, userId]);
         });
     } catch (err) {
         console.log(err);
@@ -138,7 +153,6 @@ function getPokemonMainInfo(P, i) {
             } else {
                 result = {name: response.names[lang].name, id: response.id};
             }
-            console.log(result);
             resolve(result);
         }).catch(function(error) {
             result = {name: error, id: i + 1};

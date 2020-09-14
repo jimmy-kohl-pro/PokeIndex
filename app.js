@@ -43,8 +43,17 @@ app.get('/', async function(req, res) {
 
 app.get('/pokemon/:idPokemon', async function(req, res) {
     res.setHeader('Content-Type', 'text/html');
-    params = { ...await control.getPokemonSpec(P, req.params.idPokemon), ...{req, res}, ...control.getComment(connection)}
-    res.render('pokemonView.ejs', params);
+    control.getComment(connection, req.params.idPokemon, async function(resultComment) {
+        if (req.session.loggedin) {
+            control.getIdWithUsername(connection, req.session.username, async function(resultId) {
+                params = {...await control.getPokemonSpec(P, req.params.idPokemon), ...{req, res}, ...resultComment, ...{userId : resultId}};
+                res.render('pokemonView.ejs', params);
+            })
+        } else {
+            params = {...await control.getPokemonSpec(P, req.params.idPokemon), ...{req, res}, ...resultComment, ...{userId : -1}};
+            res.render('pokemonView.ejs', params);
+        }
+    });
 });
 
 app.get('/login', function(req, res) {
@@ -85,6 +94,15 @@ app.post('/addcomment', function(req, res) {
     pokemonId = backURL.split('/').slice(-1)[0];
     if (req.session.loggedin) {
         control.addComment(connection, req.session.username, req.body.comment, pokemonId);
+    }
+    res.redirect(backURL);
+});
+
+app.post('/deletecomment/:userId/:commentId', function(req, res) {
+    var backURL = req.header('Referer') || '/';
+    pokemonId = backURL.split('/').slice(-1)[0];
+    if (req.session.loggedin) {
+        control.deleteComment(connection, req.session.username, req.params.commentId, req.params.userId)
     }
     res.redirect(backURL);
 });
