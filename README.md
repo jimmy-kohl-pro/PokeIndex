@@ -5,6 +5,8 @@ Site internet pokédex, répertorie tous les pokémon et permet de créer un com
 
 `mysql -u root -p < database.sql`
 
+`npm install`
+
 `node app.js`
 
-allez `http://localhost:8080/` sur votre nagivateur.
+allez à l'adresse `http://localhost:8080/` sur votre nagivateur.
